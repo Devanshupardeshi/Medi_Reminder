@@ -117,3 +117,19 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore build output directories
+build/
+dist/
+
+# Ignore .env files specific to frontend (if any)
+.env
+
+# Ignore any other logs or system files
+*.log
+*.DS_Store
+
