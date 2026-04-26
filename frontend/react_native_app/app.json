@@ -1,0 +1,134 @@
+{
+  "expo": {
+    "name": "MediReminder India",
+    "slug": "medireminder-india",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "medireminder",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.medireminder.india",
+      "infoPlist": {
+        "NSCameraUsageDescription": "MediReminder needs camera access to scan your prescriptions.",
+        "NSPhotoLibraryUsageDescription": "MediReminder needs photo library access to select prescription images.",
+        "NSMicrophoneUsageDescription": "MediReminder needs microphone access for voice check-ins.",
+        "LSApplicationQueriesSchemes": [
+          "whatsapp"
+        ]
+      }
+    },
+    "android": {
+      "package": "com.medireminder.india",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F766E"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.VIBRATE",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.WAKE_LOCK"
+      ],
+      "queries": [
+        {
+          "package": "com.whatsapp"
+        },
+        {
+          "package": "com.whatsapp.w4b"
+        },
+        {
+          "intent": {
+            "action": "android.intent.action.VIEW",
+            "data": {
+              "scheme": "whatsapp"
+            }
+          }
+        },
+        {
+          "intent": {
+            "action": "android.intent.action.VIEW",
+            "data": {
+              "scheme": "https",
+              "host": "wa.me"
+            }
+          }
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0F766E"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "MediReminder needs to read your prescription images.",
+          "cameraPermission": "MediReminder uses the camera to scan prescriptions."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "MediReminder uses the camera to scan prescriptions at full resolution.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/adaptive-icon.png",
+          "color": "#0F766E",
+          "androidMode": "default",
+          "androidCollapsedTitle": "Medication reminder"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 34,
+            "minSdkVersion": 24,
+            "kotlinVersion": "2.0.21",
+            "ndkVersion": "26.1.10909125",
+            "buildToolsVersion": "35.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ccc14f94-5a36-4f68-9888-fefebc1b8288"
+      }
+    },
+    "owner": "devanshu344"
+  }
+}
