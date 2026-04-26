@@ -1,59 +1,353 @@
-# 🏥 Medi_Reminder: Nexus 2.0
+<div align="center">
 
-> **Empowering Healthcare with AI-Driven Prescription Intelligence.**
+<img src="https://img.shields.io/badge/-%F0%9F%92%8A%20MediReminder%20India-0d1f3c?style=for-the-badge&labelColor=0d1f3c&color=f59e0b" alt="MediReminder India" height="40"/>
 
-Medi_Reminder is a comprehensive medical ecosystem designed to simplify healthcare management. Nexus 2.0 introduces advanced AI capabilities to bridge the gap between complex medical documents and user-friendly health tracking.
+# MediReminder India
+
+**The app a worried daughter in Pune installs to help her father in Nashik.**
+
+*Snap a prescription photo. The AI reads it, fills the alarm schedule, explains every medicine in Hindi, warns about chai with thyroid tablets, and tells the family exactly what to do if something goes wrong.*
+
+<br/>
+
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=flutter&logoColor=white)](https://flutter.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com)
+[![Vision LLM](https://img.shields.io/badge/Vision%20LLM-Prescription%20Reader-7c3aed?style=flat-square)](https://anthropic.com)
+[![License](https://img.shields.io/badge/License-MIT-16a34a?style=flat-square)](LICENSE)
+[![Agentic AI](https://img.shields.io/badge/Track-Agentic%20AI-f59e0b?style=flat-square)]()
+[![Languages](https://img.shields.io/badge/Languages-Hindi%20·%20Marathi%20·%20English-0d9488?style=flat-square)]()
+
+<br/>
+
+```
+📷 Photo → ✦ Vision LLM → ⚡ Auto-fill → ✅ Confirm → 🤖 4 Agents take over
+```
+
+</div>
 
 ---
 
-## 🌟 Key Features
+## 🔥 The Problem No Other App Solves
 
-### 🔍 AI Prescription Scanner (Nexus 2.0)
-Our flagship tool for Nexus 2.0, located in `/tools/gemini_tester`, leverages the power of **Google Gemini 1.5 & 2.0** to decypher even the most challenging medical handwriting.
+> **Every existing medicine reminder app asks you to type in medicine names, doses, and timings manually.** That's a 10-minute barrier most elderly Indian users never complete. And even after setup — they still have no idea what their medicines do, why they're taking them, or that their morning chai is silently working against their thyroid tablet.
 
-- **Multimodal AI**: Scans images to identify medicines, dosages, and frequencies.
-- **Live Model Discovery**: Dynamically fetches the latest Gemini models available to your API key.
-- **Structured Data Extraction**: Converts raw prescription images into actionable medical data.
+MediReminder India fixes all of this — with AI doing the heavy lifting so the family gets peace of mind.
 
-### 🛡️ Secure & Scalable Backend
-Built with a modular architecture to support high-performance medical data processing.
+| The Old Way | MediReminder India |
+|---|---|
+| Type every medicine manually | 📷 Photo → auto-filled schedule in seconds |
+| "Metformin 500mg — twice daily" | 💬 Full Hindi/English explanation of what it does |
+| Reminder ignored → nothing happens | 🎙️ AI starts a check-in conversation in Hindi |
+| Family gets "Ramesh missed a dose" | ❤️ Family gets an actionable, contextual alert |
+| No food guidance anywhere | 🍵 Thyroid + chai conflict flagged — India-specific |
+
+---
+
+## ✦ How It Works
+
+### Step 1 — Prescription Photo → Auto-filled Alarm Schedule
+
+```
+User snaps a photo of the prescription (handwritten, typed, or WhatsApp screenshot)
+         │
+         ▼
+  ┌─────────────────────────────────────┐
+  │        Vision Language Model         │
+  │                                     │
+  │  Reads handwriting                  │
+  │  Decodes Indian shorthand           │
+  │  (BD, TDS, 1-0-1, SOS, HS, OD)    │
+  │  Returns structured JSON            │
+  │  Flags low-confidence fields        │
+  └─────────────────────────────────────┘
+         │
+         ▼
+  Alarm schedule pre-populated in Flutter UI
+  (medicine name · dose · time · food flag · days)
+         │
+         ▼
+  User reviews, makes any small edit, taps Save ✅
+```
+
+**Why a Vision LLM over a separate OCR pipeline?**  
+A VLM understands context, not just pixels — better accuracy on messy Indian handwriting, zero extra pipeline to build, and a `confidence` flag per field so uncertain extractions are highlighted orange for user review. *No alarm ever activates without the user confirming first.*
+
+#### Indian Prescription Shorthand the VLM Decodes
+
+| Code | Meaning |
+|------|---------|
+| `1-0-1` | Morning + Night |
+| `BD` | Twice daily |
+| `TDS` | Three times daily |
+| `OD` | Once daily |
+| `HS` | Bedtime (21:00) |
+| `SOS` | As needed |
+
+---
+
+## 🤖 Four LLM-Powered Agents
+
+After the prescription is saved, four autonomous agents take over — each solving a real problem no existing app addresses.
+
+---
+
+### Agent 1 — Medicine Literacy Agent ⭐ *Most Human Value*
+
+> *An elderly patient gets 5 medicines. They have no idea what any of them do. They take them because the doctor said so.*
+
+The moment the schedule saves, this agent generates a **bilingual medicine card** for every item on the prescription — and stays available for follow-up questions.
+
+**Sample card — Metformin** (auto-generated by Agent 1):
+
+| | Hindi | English |
+|--|---|---|
+| यह क्यों है | खून में शुगर को कंट्रोल करती है | Controls blood sugar levels |
+| कब लें | खाने के साथ, दो बार रोज़ | With meals, twice daily |
+| dose भूल जाएं | अगली dose का टाइम हो तो skip करें | Skip if close to next dose — never double |
+| ध्यान रखें | शुरुआत में पेट में जलन सामान्य है | Mild stomach upset is normal initially |
+| क्या न खाएं | ज़्यादा शराब न लें | Avoid excess alcohol |
+
+User taps **"मुझे और बताओ"** → the agent continues the conversation.
+
+---
+
+### Agent 2 — Proactive Voice Check-In Agent 🎙️ *Multi-turn Dialogue*
+
+> *Normal app: reminder fires → user ignores → marked "missed" → nothing happens.*
+
+When a dose is missed, this agent starts a real **3-turn Hindi/Marathi conversation**, detects symptoms, and escalates with context when needed.
+
+```
+App (AI):  "Ramesh ji, aapki BP ki dawa miss ho gayi. Kya aap theek hain ya bhool gaye?"
+User:      "Thoda chakkar aa raha hai."
+App (AI):  "Chakkar BP ki dawa miss hone se ho sakta hai. Abhi lete rahe aur paani piyein.
+            Main aapke bete ko abhi alert kar raha hoon." → Agent 4 fires.
+```
+
+The model reasons: which medicine was missed → clinical significance → interprets the patient's Hindi response for symptom signals → decides whether to escalate or reassure. *A high-capability LLM is essential here — smaller models miss the "chakkar = BP symptom" signal entirely.*
+
+---
+
+### Agent 3 — Food & Lifestyle Conflict Agent 🍵 *India-Specific AI*
+
+> *This information exists nowhere in any Indian health app today.*
+
+This agent cross-references your full medicine list against the **Indian kitchen** — not a generic Western drug interaction database.
+
+**One-time kitchen rules card** (auto-generated after onboarding):
+
+```
+• Thyronorm:   खाली पेट लें। चाय, दूध, या coffee से कम से कम 30 मिनट पहले।
+• Warfarin:    हफ्ते में ज़्यादा पालक, मेथी, सरसों साग न खाएं — vitamin K बढ़ जाता है।
+• Metformin:   भारी मैदे या चावल के साथ लेने से शुगर spike हो सकती है।
+• Amlodipine:  अंगूर का रस (grapefruit) बिल्कुल avoid करें।
+```
+
+**Contextual nudge at reminder time:**
+> Morning reminder fires for Thyronorm → the AI detects food conflict → adds one soft line:  
+> *"याद रखें — अभी 30 मिनट तक चाय न पिएं ☕"*
+
+---
+
+### Agent 4 — Caregiver Triage Agent ❤️ *Emotionally Powerful*
+
+> *Normal app sends: "Ramesh missed a dose." Family panics or ignores it — no context, no guidance, no action.*
+
+This agent reads what was missed, how critical it is, whether the check-in got a response, and writes a **contextual, actionable message** for the family via WhatsApp.
+
+**Sample caregiver message** (Agent 4 output):
+```
+"Papa ne aaj apni heart ki dawa (Amlodipine) do baar miss ki hai. Maine unhe
+check-in message bheja tha lekin koi response nahi aaya. Yeh BP ki important
+dawa hai — please unhe call karein ya ghar jaayein. Agar chest mein takleef
+ho to turant doctor se milaayein."
+```
+
+**AI reasoning chain behind every message:**
+`Which medicine?` → `Is it critical (heart/BP/diabetes) or low-stakes?` → `Did patient respond to check-in?` → `How many times missed this week?` → `Generate proportionate message in Hindi/English`
+
+*Each step is LLM reasoning — not a template fill.*
+
+---
+
+## 🧠 Baked In — Missed Dose Recovery
+
+Not a 5th agent. Silent AI reasoning **inside every "Skip" tap** — invisible to the user but always working.
+
+When a user taps Skip, the AI silently reasons: *medicine name + hours since scheduled time → what is the safe recovery action?* One plain-language line appears below the missed log. No extra screen. No friction.
+
+```
+Amlodipine  missed 8 AM → seen at 5 PM:
+✓ "Abhi bhi le sakte hain — koi dikkat nahi. Raat wali dose sahi time par lena."
+
+Warfarin    missed 8 AM → seen at 7 PM:
+⚠️ "Yeh dose mat lein ab — double lena dangerous ho sakta hai.
+    Kal se normal schedule follow karein aur doctor ko zaroor batayein."
+
+Amoxicillin missed 8 AM → seen at 10 AM:
+✓ "Sirf 2 ghante hue hain — abhi le lein.
+   Dose skip mat karein, course poora karna zaroori hai."
+```
+
+---
+
+## 🗺️ End-to-End User Journey
+
+```
+1. Upload ──── Photo sent to Vision LLM
+2. VLM Reads ─ Handwriting + shorthand → structured JSON
+3. Auto-fill ─ Alarm schedule pre-populated in Flutter
+4. Confirm ─── User reviews, taps Save ✅
+5. Literacy ── Agent 1: Hindi/English medicine cards generated
+6. Food Check ─ Agent 3: kitchen rules card generated
+7. Remind ──── Voice reminder fires + contextual food nudge
+8. Missed ──── Baked-in AI: safe recovery line shown on Skip
+9. Check-In ── Agent 2: 3-turn Hindi conversation
+10. Escalate ─ Agent 4: WhatsApp caregiver message (user reviews before sending)
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Role |
+|---|---|---|
+| **Prescription Reader** | Vision Language Model (VLM) | Reads prescription image → decodes handwriting + Indian shorthand → returns structured JSON. Single inference call — no separate OCR needed. |
+| **Auto-fill Engine** | Flutter + JSON parser | Maps VLM JSON directly to alarm widgets. All fields pre-populated. User confirms to activate. |
+| **Agent 1 — Medicine Literacy** | Large Language Model | Generates bilingual medicine cards. Powers "मुझे और बताओ" follow-up conversation. |
+| **Agent 2 — Voice Check-In** | LLM + Flutter TTS | 3-turn in-app conversation after missed dose. Symptom detection. Triggers Agent 4 escalation. |
+| **Agent 3 — Food Conflict** | Large Language Model | Kitchen rules card from full medicine list. Contextual nudge at reminder time. |
+| **Agent 4 — Caregiver Triage** | Large Language Model | Reasons about severity, generates actionable Hindi/English caregiver summary, sends via WhatsApp deep link. |
+| **Mobile App** | Flutter (Android) | Dashboard, upload, review, alarm cards, literacy screen, food conflict card, agent outputs. |
+| **Backend** | FastAPI / Node | Receives prescription image, calls AI model API, returns JSON to Flutter. Orchestrates agent calls. |
+| **Database** | Firebase / Firestore | Medicine schedules, dose logs, caregiver contacts, agent outputs and history. |
+| **Voice / TTS** | Flutter TTS | Hindi, Marathi, English voice reminders. |
+| **Notifications** | Flutter local notifications | Fires medicine alarms on-device at scheduled times. |
+| **Messaging** | WhatsApp deep link | Pre-filled caregiver alerts. User reviews and sends. |
+
+**On the production tiering plan:** We use a high-capability model for prescription reading and complex agent reasoning (medical depth + Hindi quality that smaller models lack), with lighter models for simple confirmations and logging at scale — keeping costs manageable while maintaining quality where it matters.
+
+---
+
+## 🏗️ Project Structure
+
+```
+Medi_Reminder/
+├── lib/
+│   ├── screens/
+│   │   ├── dashboard/          # Home screen, alarm cards
+│   │   ├── prescription/       # Upload + VLM review screen
+│   │   ├── medicine_literacy/  # Agent 1 card + follow-up chat
+│   │   ├── food_conflict/      # Agent 3 kitchen rules card
+│   │   ├── check_in/           # Agent 2 conversation UI
+│   │   └── caregiver/          # Agent 4 WhatsApp alert
+│   ├── agents/
+│   │   ├── literacy_agent.dart
+│   │   ├── checkin_agent.dart
+│   │   ├── food_conflict_agent.dart
+│   │   └── caregiver_agent.dart
+│   ├── services/
+│   │   ├── vlm_service.dart    # Prescription image → JSON
+│   │   ├── alarm_service.dart  # Flutter local notifications
+│   │   └── firebase_service.dart
+│   └── models/
+│       ├── medicine.dart
+│       ├── dose_log.dart
+│       └── prescription.dart
+├── backend/
+│   ├── main.py                 # FastAPI entry point
+│   ├── vlm_handler.py          # VLM API call + JSON parsing
+│   └── agent_orchestrator.py   # Agent call routing
+└── README.md
+```
 
 ---
 
 ## 🚀 Getting Started
 
-### 📦 Installation
+### Prerequisites
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Devanshupardeshi/Medi_Reminder.git
-   cd Medi_Reminder
-   ```
+- Flutter SDK `>=3.0.0`
+- Python `>=3.10` (for FastAPI backend)
+- Firebase project (Firestore enabled)
+- AI model API key (Vision LLM + LLM access)
 
-2. **Run the AI Prescription Tool:**
-   ```bash
-   cd tools/gemini_tester
-   pip install -r requirements.txt # See tools/gemini_tester/README.md
-   python prescription_gui.py
-   ```
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Devanshupardeshi/Medi_Reminder.git
+cd Medi_Reminder
+```
+
+### 2. Set up the backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env
+# Add your AI model API key and Firebase credentials to .env
+uvicorn main:app --reload
+```
+
+### 3. Set up the Flutter app
+
+```bash
+cd ..
+flutter pub get
+# Add your Firebase config files:
+#   android/app/google-services.json
+# Update lib/config/api_config.dart with your backend URL
+flutter run
+```
 
 ---
 
-## 🛠️ Project Structure
+## 🔒 Scope & Honest Boundaries
 
-```
-Medi_Reminder/
-├── backend/            # Scalable API & Logic
-├── tools/
-│   └── gemini_tester/  # AI Prescription Scanner GUI
-└── README.md           # You are here!
-```
+MediReminder India is a **medicine adherence and support tool** — not a medical device.
+
+| ❌ Out of Scope | ✅ How We Frame It |
+|---|---|
+| Medical advice, diagnosis, or clinical recommendations | Medicine cards give educational context — like what a pharmacist explains. Every card ends with: *"Please confirm with your doctor."* |
+| 100% OCR accuracy on every prescription | Low-confidence extractions highlighted orange — user always confirms before any alarm activates |
+| Clinical-grade drug interaction checking | Food conflict guidance is based on commonly known interactions — user always verifies with their doctor |
+| Automatic WhatsApp sending | Caregiver messages are pre-filled and reviewed by the user before sending — always |
+| Ordering medicines automatically | Zero actions happen without explicit user approval |
+
+---
+
+## 💡 Post-MVP Direction
+
+**WhatsApp as the primary interface** — Send a prescription photo to a WhatsApp number → the AI reads it → sends back the alarm summary → check-ins and caregiver alerts all in WhatsApp. No app install required. Elderly adoption would multiply significantly.
+
+---
+
+## 👥 Team — Dominant Devs
+
+| Role | Name | GitHub |
+|---|---|---|
+| 👑 Team Lead | Devanshu Pardeshi | [@Devanshupardeshi](https://github.com/Devanshupardeshi) |
+| 🛠️ Developer | Krish Shah | — |
+| 🛠️ Developer | Harsh Raj Singh | — |
+| 🛠️ Developer | Nakshatra Mote | — |
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
-Built with ❤️ for a healthier future.
+
+<div align="center">
+
+**MediReminder India**
+
+*Vision LLM prescription reader · Auto-fill alarms · 4 LLM-powered agents · Missed-dose reasoning baked in*
+
+<br/>
+
+> *"We are not building a pill reminder. We are building the app a worried daughter in Pune installs to help her father in Nashik — the AI reads his handwritten prescription and fills the alarms automatically, explains each medicine in Hindi so he finally understands what he's taking, reminds him about his morning chai and thyroid tablet, and sends his son a message he can actually act on if something goes wrong. The AI does the work. The family gets peace of mind."*
+
+</div>
