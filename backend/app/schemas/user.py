@@ -30,3 +30,13 @@ class UpdateProfileResponse(BaseModel):
     first_name: str
     last_name: str
     last_login_at: datetime | None = None
+
+
+class ProfileResponse(BaseModel):
+    """Current user profile (GET /users/profile)."""
+
+    user_id: str
+    email: EmailStr
+    first_name: str
+    last_name: str
+    last_login_at: datetime | None = None

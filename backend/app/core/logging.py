@@ -29,3 +29,9 @@ def configure_logging(level: str) -> None:
     root_logger.handlers.clear()
     root_logger.setLevel(level.upper())
     root_logger.addHandler(handler)
+
+    # Reduce routine noise from periodic workers and transport logs.
+    logging.getLogger("app.workers.missed_dose_worker").setLevel(logging.WARNING)
+    logging.getLogger("app.services.adherence_service").setLevel(logging.WARNING)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)

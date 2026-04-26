@@ -12,6 +12,7 @@ import httpx
 
 from app.core.config import get_settings
 from app.utils.json_utils import extract_json_object
+from app.utils.llm_log import log_model_text
 logger = logging.getLogger(__name__)
 _LOG_BODY = 500
 
@@ -57,13 +58,11 @@ class GeminiTextClient:
         response_schema: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Generate and parse strict JSON from text-only prompt."""
-        text = await self.generate_from_parts(
+        return await self._generate_and_parse_json(
             parts=[{"text": user_prompt}],
             system_instruction=system_instruction,
-            response_mime_type="application/json",
             response_schema=response_schema,
         )
-        return extract_json_object(text)
 
     async def generate_json_from_parts(
         self,
@@ -73,13 +72,43 @@ class GeminiTextClient:
         response_schema: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Generate and parse strict JSON from multimodal parts."""
-        text = await self.generate_from_parts(
+        return await self._generate_and_parse_json(
             parts=parts,
             system_instruction=system_instruction,
-            response_mime_type="application/json",
             response_schema=response_schema,
         )
-        return extract_json_object(text)
+
+    async def _generate_and_parse_json(
+        self,
+        *,
+        parts: list[dict[str, Any]],
+        system_instruction: str | None,
+        response_schema: dict[str, Any] | None,
+    ) -> dict[str, Any]:
+        """Generate JSON with one retry when model returns non-JSON text."""
+        attempts = 2
+        for attempt in range(1, attempts + 1):
+            text = await self.generate_from_parts(
+                parts=parts,
+                system_instruction=system_instruction,
+                response_mime_type="application/json",
+                response_schema=response_schema,
+            )
+            try:
+                return extract_json_object(text)
+            except ValueError as exc:
+                logger.warning("gemini.parse_failed attempt=%s reason=no_json_object", attempt)
+                log_model_text(
+                    logger,
+                    "gemini.parse_failed.preview",
+                    text,
+                    int(self.settings.llm_response_log_max_chars),
+                )
+                if attempt >= attempts:
+                    raise RuntimeError("Gemini returned non-JSON response") from exc
+                await asyncio.sleep(0.35 * attempt)
+
+        raise RuntimeError("Gemini JSON generation failed unexpectedly")
 
     async def generate_from_parts(
         self,
@@ -176,10 +205,15 @@ class GeminiTextClient:
 
         content = (candidates[0] or {}).get("content") or {}
         text_parts = content.get("parts") or []
+        merged_parts: list[str] = []
         for p in text_parts:
             t = str(p.get("text", "")).strip()
             if t:
-                return t
+                merged_parts.append(t)
+        if merged_parts:
+            # Gemini can split one logical answer across multiple text parts.
+            # Join all parts before JSON parsing to avoid accidental truncation.
+            return "\n".join(merged_parts)
 
         ms = (time.perf_counter() - t0) * 1000.0
         logger.error("gemini.failed reason=empty_text duration_ms=%.0f", ms)

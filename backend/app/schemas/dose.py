@@ -25,3 +25,43 @@ class MissedDoseSummary(BaseModel):
     user_id: str
     missed_count: int
     last_missed_at: datetime | None = None
+
+
+class DoseCalendarDay(BaseModel):
+    """Calendar summary for one day."""
+
+    date: str
+    total: int
+    taken: int
+    missed: int
+    skipped: int
+    pending: int
+
+
+class DoseCalendarResponse(BaseModel):
+    """Month-level dose summary for dashboard calendar."""
+
+    success: bool
+    month: str
+    tz: str
+    days: list[DoseCalendarDay]
+
+
+class DoseDayItem(BaseModel):
+    """Single dose row for a selected date."""
+
+    dose_log_id: str
+    medicine_id: str
+    medicine_name: str
+    scheduled_for: datetime
+    status: str
+    taken_at: datetime | None = None
+
+
+class DoseDayResponse(BaseModel):
+    """All doses scheduled for one selected date."""
+
+    success: bool
+    date: str
+    tz: str
+    items: list[DoseDayItem]
